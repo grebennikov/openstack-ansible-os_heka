@@ -1,0 +1,58 @@
+---
+
+- name: Install heka
+  hosts: "{{ heka_hosts }}"
+  max_fail_percentage: 20
+  user: root
+  pre_tasks:
+    - name: Use the lxc-openstack aa profile
+      lxc_container:
+        name: "{{ container_name }}"
+        container_config:
+          - "lxc.aa_profile=lxc-openstack"
+      delegate_to: "{{ physical_host }}"
+      when: not is_metal | bool
+      register: container_config
+      tags:
+        - lxc-aa-profile
+    - name: Wait for container ssh
+      wait_for:
+        port: "22"
+        delay: "{{ ssh_delay }}"
+        search_regex: "OpenSSH"
+        host: "{{ ansible_ssh_host }}"
+      delegate_to: "{{ physical_host }}"
+      when: >
+            (container_config is defined and container_config | changed) or
+            (container_extra_config is defined and container_config | changed)
+      register: ssh_wait_check
+      until: ssh_wait_check | success
+      retries: 3
+      tags:
+        - ssh-wait
+    - name: Create log dir
+      file:
+        path: "{{ item.path }}"
+        state: directory
+      with_items:
+        - { path: "/openstack/log/{{ inventory_hostname }}-heka" }
+      when: is_metal | bool
+      tags:
+        - heka
+    - name: Create log aggregation links
+      file:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        state: "{{ item.state }}"
+        force: "yes"
+      with_items:
+        - { src: "/openstack/log/{{ inventory_hostname }}-heka", dest: "/var/log/heka", state: "link" }
+      when: is_metal | bool
+      tags:
+        - heka
+  roles:
+    - role: "os_heka"
+      tags:
+        - "heka"
+  vars:
+    is_metal: "{{ properties.is_metal|default(false) }}"
