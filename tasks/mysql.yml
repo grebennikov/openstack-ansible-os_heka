@@ -1,0 +1,7 @@
+- name: heka-configure | Create mysql  decoder toml files
+  template: src=decoder-mysql.toml.j2 dest={{heka_etc_dir}}/decoder-mysql.toml
+  notify: hekad restart
+
+- name: heka-configure | Configure mysql logstreamer
+  template: src=logstreamer-mysql.toml.j2 dest={{heka_etc_dir}}/logstreamer-mysql.toml
+  notify: hekad restart

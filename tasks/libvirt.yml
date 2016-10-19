@@ -1,0 +1,10 @@
+- name: heka-libvirt | Add user heka to group root
+  user: name=heka groups=root
+
+- name: heka-configure | Create libvirt decoder toml files
+  template: src=decoder-libvirt.toml.j2 dest={{heka_etc_dir}}/decoder-libvirt.toml
+  notify: hekad restart
+
+- name: heka-configure | Configure libvirt logstreamer
+  template: src=logstreamer-libvirt.toml.j2 dest={{heka_etc_dir}}/logstreamer-libvirt.toml
+  notify: hekad restart

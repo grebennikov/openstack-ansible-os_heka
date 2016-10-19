@@ -1,0 +1,5 @@
+[elasticsearch_encoder]
+type = "ESJsonEncoder"
+index = "%{Type}-%{%Y.%m.%d}"
+es_index_from_timestamp = true
+fields = [ "DynamicFields", "Hostname", "Logger", "Payload", "Pid", "Severity", "Timestamp", "Type" ]

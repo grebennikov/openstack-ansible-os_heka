@@ -1,0 +1,23 @@
+---
+
+heka_enabled: yes                           # The role is enabled
+heka_version: 0.9.1                         # Set version
+heka_deb: https://github.com/mozilla-services/heka/releases/download/v{{heka_version}}/heka_{{heka_version}}_amd64.deb
+
+heka_etc_dir: /etc/heka.d
+heka_modules_dir: /usr/share/lma_collector/
+heka_base_dir: /var/cache/hekad
+heka_pid_file: /var/run/hekad.pid
+heka_maxproc: 1
+
+heka_inputs: ""
+heka_decoders: ""
+heka_encoders: ""
+heka_outputs: ""
+lua_modules_dir: /usr/share/heka/lua_modules
+lua_share_dir: /usr/share/heka
+heka_logs_dir: /var/log/log-storage/
+heka_syslog_pattern: '<%PRI%>%TIMESTAMP% %HOSTNAME% %syslogtag%%msg:::sp-if-no-1st-sp%%msg%\n'
+heka_fallback_syslog_pattern: '%TIMESTAMP% %HOSTNAME% %syslogtag%%msg:::sp-if-no-1st-sp%%msg%\n'
+heka_apache_log_pattern: '%{X-Forwarded-For}i %l %u %t \"%r\" %>s %b %D \"%{Referer}i\" \"%{User-Agent}i\"'
+# vim:sw=2

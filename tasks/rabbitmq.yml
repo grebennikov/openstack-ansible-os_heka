@@ -1,0 +1,16 @@
+- name: heka-configure | Create rabbitmq decoder toml files
+  template: src=decoder-rabbitmq.toml.j2 dest={{heka_etc_dir}}/decoder-rabbitmq.toml
+  notify: hekad restart
+
+- set_fact:
+     splitter_name='rabbitmq'
+     splitter_delimiter='\n(=[^=]+====)'
+     splitter_delimiter_eol='false'
+- name: heka-configure | Setup rabbitmq splitter
+  template: src=regex_splitter.j2 dest={{heka_etc_dir}}/splitter-rabbitmq.toml
+  notify: hekad restart
+
+
+- name: heka-configure | Configure logstreamer
+  template: src=logstreamer-rabbitmq.toml.j2 dest={{heka_etc_dir}}/logstreamer-rabbitmq.toml
+  notify: hekad restart

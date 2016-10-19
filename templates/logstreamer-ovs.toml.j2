@@ -1,0 +1,7 @@
+[ovs_logstreamer]
+type = "LogstreamerInput"
+log_directory = "/var/log/openvswitch"
+file_match = '(?P<Service>ovs\-vswitchd|ovsdb\-server)\.log$'
+differentiator = [  'Service' ]
+decoder = "ovs_decoder"
+splitter = "TokenSplitter"

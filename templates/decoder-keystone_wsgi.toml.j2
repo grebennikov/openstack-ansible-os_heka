@@ -1,0 +1,8 @@
+[keystone_wsgi_decoder]
+type = "SandboxDecoder"
+filename = "{{ heka_modules_dir }}/decoders/keystone_wsgi_log.lua"
+
+
+[keystone_wsgi_decoder.config]
+
+    apache_log_pattern = '{{ heka_apache_log_pattern }}'

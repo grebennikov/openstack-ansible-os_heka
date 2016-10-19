@@ -1,0 +1,10 @@
+[mysql_decoder]
+type = "SandboxDecoder"
+filename = "{{ heka_modules_dir }}/decoders/mysql_log.lua"
+
+
+[mysql_decoder.config]
+
+    syslog_pattern = '{{ heka_syslog_pattern }}'
+
+

@@ -1,0 +1,7 @@
+[haproxy_logstreamer]
+type = "LogstreamerInput"
+log_directory = "/var/log/"
+file_match = 'haproxy.log'
+differentiator = ["haproxy"]
+decoder = "haproxy_decoder"
+splitter = "TokenSplitter"

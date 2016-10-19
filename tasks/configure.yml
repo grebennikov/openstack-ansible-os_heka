@@ -1,0 +1,104 @@
+---
+
+#- name: heka-configure | Ensure the service heka is stopped
+#  service: name=heka state=stopped
+
+- name: heka-configure | Ensure that heka working dir exists
+  file: state=directory path={{heka_base_dir}} owner=heka group=heka
+
+### copy modules
+- name: heka-configure | Ensure that heka modules dir exists
+  file: state=directory path={{lua_modules_dir}}
+
+- name: heka-configure | Copy lua modules
+  copy: src=plugins/common/ dest={{lua_modules_dir}}/
+  notify: hekad restart
+
+- name: heka-configure | Copy extra_fields module
+  template: src=extra_fields.lua.j2 dest={{lua_modules_dir}}/extra_fields.lua
+  notify: hekad restart
+
+- name: heka-configure | Ensure that heka etc dir exists
+  file: state=directory path={{heka_etc_dir}}
+
+- name: heka-configure | Ensure that heka modules dir exists
+  file: state=directory path={{heka_modules_dir}}/decoders/ owner=heka group=heka
+
+### copy decoders
+- name: heka-configure | Copy Heka decoders folder
+  copy: src=plugins/decoders/ dest={{heka_modules_dir}}/decoders/
+  notify: hekad restart
+
+- name: heka-configure | Create global config
+  template: src=config.toml.j2 dest={{heka_etc_dir}}/global.toml
+  notify: hekad restart
+
+- name: heka-configure | Create syslog decoder toml files
+  template: src=decoder-system.toml.j2 dest={{heka_etc_dir}}/decoder-system.toml
+  notify: hekad restart
+
+- name: heka-configure | Configure logstreamer
+  template: src=logstreamer-system.toml.j2 dest={{heka_etc_dir}}/logstreamer-system.toml
+  notify: hekad restart
+
+- include: haproxy.yml
+  when: heka_role == 'haproxy' 
+
+- include: keystone.yml
+  when: heka_role == 'keystone'
+
+- include: glance.yml
+  when: heka_role == 'glance'
+
+- include: nova.yml
+  when: heka_role == 'nova'
+
+- include: cinder.yml
+  when: heka_role == 'cinder'
+
+- include: heat.yml
+  when: heka_role == 'heat'
+
+- include: neutron.yml
+  when: heka_role == 'neutron'
+
+- include: mysql.yml
+  when: heka_role == 'mysql'
+
+- include: rabbitmq.yml
+  when: heka_role == 'rabbitmq'
+
+- include: horizon.yml
+  when: heka_role == 'horizon'
+
+- include: libvirt.yml
+  when: heka_role == 'compute'
+
+
+### Setup output
+- name: heka-configure | Setup Elasticsearch encoder
+  copy: src=encoder-elasticsearch.toml dest={{heka_etc_dir}}/encoder-elasticsearch.toml
+  when: elasticsearch_url is defined
+  notify: hekad restart
+
+- name: heka-configure | Setup Elasticsearch output
+  template: src=output-elasticsearch.toml.j2 dest={{heka_etc_dir}}/output-elasticsearch.toml owner=heka group=heka
+  when: elasticsearch_url is defined
+  notify: hekad restart
+
+### Setup binary/service
+#- name: heka-configure | Setup lma_collector wrapper
+#  copy: src=lma_collector_wrapper dest=/usr/local/bin/lma_collector_wrapper mode=0775
+#  notify: hekad restart
+
+
+#- name: heka-configure | Setup service
+#  copy: src=lma_collector.conf dest=/etc/init/lma_collector.conf
+#  notify: hekad restart
+
+- name: heka-configure | Setup service
+  template: src=heka.j2 dest=/etc/init.d/heka mode=0775
+  notify: hekad restart
+
+- name: heka-configure | Ensure the service is started
+  service: name=heka state=started

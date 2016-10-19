@@ -1,0 +1,7 @@
+[pacemaker_logstreamer]
+type = "LogstreamerInput"
+log_directory = "/var/log"
+file_match = 'pacemaker\.log$'
+differentiator = [ 'pacemaker' ]
+decoder = "pacemaker_decoder"
+splitter = "TokenSplitter"

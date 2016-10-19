@@ -1,0 +1,14 @@
+- name: heka-configure | Create openstack decoder toml files
+  template: src=decoder-openstack.toml.j2 dest={{heka_etc_dir}}/decoder-openstack.toml
+  notify: hekad restart
+
+- set_fact:
+     splitter_name='openstack'
+     splitter_delimiter='\n'
+- name: heka-configure | Setup openstack splitter
+  template: src=token_splitter.j2 dest={{heka_etc_dir}}/splitter-openstack.toml
+  notify: hekad restart
+
+- name: heka-configure | Configure nova logstreamer
+  template: src=logstreamer-nova.toml.j2 dest={{heka_etc_dir}}/logstreamer-nova.toml
+  notify: hekad restart

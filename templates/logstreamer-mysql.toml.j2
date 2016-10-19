@@ -1,0 +1,7 @@
+[mysql_logstreamer]
+type = "LogstreamerInput"
+log_directory = "/var/log"
+file_match = 'mysqld\.log$'
+differentiator = ['mysql']
+decoder = "mysql_decoder"
+splitter = "TokenSplitter"

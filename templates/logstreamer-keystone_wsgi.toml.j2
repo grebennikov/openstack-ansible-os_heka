@@ -1,0 +1,8 @@
+[keystone_wsgi_logstreamer]
+type = "LogstreamerInput"
+log_directory = "/var/log/apache2"
+file_match = 'keystone_wsgi_(?P<Service>.+)_access\.log\.?(?P<Seq>\d*)$'
+differentiator = ['keystone-wsgi-', 'Service']
+priority = ["^Seq"]
+decoder = "keystone_wsgi_decoder"
+splitter = "TokenSplitter"

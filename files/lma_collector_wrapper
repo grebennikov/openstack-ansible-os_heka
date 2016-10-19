@@ -1,0 +1,6 @@
+#!/bin/sh
+
+HEKAD="/usr/bin/hekad"
+
+
+exec $HEKAD -config=/etc/lma_collector

@@ -1,0 +1,7 @@
+[mongo_logstreamer]
+type = "LogstreamerInput"
+log_directory = "/var/log/mongodb"
+file_match = 'mongodb.log'
+differentiator = ["mongo"]
+decoder = "mongo_decoder"
+splitter = "TokenSplitter"

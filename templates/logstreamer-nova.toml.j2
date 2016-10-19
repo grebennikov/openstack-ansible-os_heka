@@ -1,0 +1,8 @@
+[nova_logstreamer]
+type = "LogstreamerInput"
+log_directory = "/var/log/nova"
+file_match = '(?P<Service>.+)\.log\.?(?P<Seq>\d*)$'
+differentiator = ['nova', '_', 'Service']
+priority = ["^Seq"]
+decoder = "openstack_decoder"
+splitter = "openstack_splitter"

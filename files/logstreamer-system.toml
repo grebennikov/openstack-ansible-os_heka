@@ -1,0 +1,7 @@
+[system_logstreamer]
+type = "LogstreamerInput"
+log_directory = "/var/log"
+file_match = '(?P<Service>daemon\.log|cron\.log|haproxy\.log|kern\.log|auth\.log|syslog|messages|debug)'
+differentiator = [ 'system.', 'Service' ]
+decoder = "system_decoder"
+splitter = "TokenSplitter"

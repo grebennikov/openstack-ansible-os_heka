@@ -1,0 +1,16 @@
+[elasticsearch_output]
+type = "ElasticSearchOutput"
+message_matcher = "Type == 'log' || Type  == 'notification'"
+encoder = "elasticsearch_encoder"
+
+flush_interval = 5000
+flush_count = 10
+
+server = "{{ elasticsearch_url }}"
+
+use_buffering = true
+
+[elasticsearch_output.buffering]
+max_buffer_size = 1073741824
+max_file_size = 134217728
+full_action = "drop"

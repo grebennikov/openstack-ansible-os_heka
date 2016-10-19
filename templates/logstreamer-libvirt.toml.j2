@@ -1,0 +1,7 @@
+[libvirt_logstreamer]
+type = "LogstreamerInput"
+log_directory = "/var/log/libvirt"
+file_match = 'libvirtd.log'
+differentiator = ["libvirt"]
+decoder = "libvirt_decoder"
+splitter = "TokenSplitter"

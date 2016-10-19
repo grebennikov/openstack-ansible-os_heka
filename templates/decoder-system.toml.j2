@@ -1,0 +1,10 @@
+[system_decoder]
+type = "SandboxDecoder"
+filename = "{{ heka_modules_dir }}decoders/generic_syslog.lua"
+
+
+[system_decoder.config]
+
+    syslog_pattern = '{{ heka_syslog_pattern }}'
+
+    fallback_syslog_pattern = '{{ heka_fallback_syslog_pattern }}'

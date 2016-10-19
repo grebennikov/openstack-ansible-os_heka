@@ -1,0 +1,7 @@
+- name: heka-configure | Create haproxy decoder toml files
+  template: src=decoder-haproxy.toml.j2 dest={{heka_etc_dir}}/decoder-haproxy.toml
+  notify: hekad restart
+
+- name: heka-configure | Configure haproxy logstreamer
+  template: src=logstreamer-haproxy.toml.j2 dest={{heka_etc_dir}}/logstreamer-haproxy.toml
+  notify: hekad restart

@@ -1,0 +1,8 @@
+[keystone_logstreamer]
+type = "LogstreamerInput"
+log_directory = "/var/log/keystone"
+file_match = '(?P<Service>.+)\.log\.?(?P<Seq>\d*)$'
+differentiator = ['keystone', '_', 'Service']
+priority = ["^Seq"]
+decoder = "openstack_decoder"
+splitter = "openstack_splitter"
